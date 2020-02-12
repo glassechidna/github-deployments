@@ -84,5 +84,5 @@ func create(ctx context.Context, c *github.Client, owner, repo, commit, environm
 	}
 
 	fmt.Printf("::set-output name=deploymentId::%d\n", deployment.GetID())
-	fmt.Printf("::set-output name=JOB_DEPLOYMENTID::%d\n", deployment.GetID())
+	fmt.Printf("::set-env name=JOB_DEPLOYMENTID::%d\n", deployment.GetID())
 }
