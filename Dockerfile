@@ -5,5 +5,5 @@ COPY . .
 RUN go build -ldflags="-s -w"
 
 FROM gcr.io/distroless/static
-COPY --from=builder /deploy/deploy .
-ENTRYPOINT ["/deploy"]
+COPY --from=builder /deploy/github-deployments .
+ENTRYPOINT ["/github-deployments"]
