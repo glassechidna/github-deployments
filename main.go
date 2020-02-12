@@ -17,6 +17,10 @@ func main() {
 	repo := bits[1]
 
 	deploymentId, _ := strconv.Atoi(os.Getenv("INPUT_DEPLOYMENTID"))
+	if deploymentId == 0 {
+		deploymentId, _ = strconv.Atoi(os.Getenv("JOB_DEPLOYMENTID"))
+	}
+
 	environment := os.Getenv("INPUT_ENVIRONMENT")
 	environmentUrl := os.Getenv("INPUT_ENVIRONMENTURL")
 	description := os.Getenv("INPUT_DESCRIPTION")
@@ -80,4 +84,5 @@ func create(ctx context.Context, c *github.Client, owner, repo, commit, environm
 	}
 
 	fmt.Printf("::set-output name=deploymentId::%d\n", deployment.GetID())
+	fmt.Printf("::set-output name=JOB_DEPLOYMENTID::%d\n", deployment.GetID())
 }
