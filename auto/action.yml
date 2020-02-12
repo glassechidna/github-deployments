@@ -1,0 +1,31 @@
+name: GitHub Deployments Creator
+description: Create Github deployments
+inputs:
+  environment:
+    description: Name of environment being deployed to
+    required: true
+    default: production
+  environmentUrl:
+    description: URL of service being deployed
+    required: true
+    default: ""
+  description:
+    description: Optional explanation of status update
+    required: true
+    default: ""
+  token:
+    description: GitHub API key. GITHUB_TOKEN will not kick off deployments
+    required: true
+  sha:
+    description: SHA of commit being deployed.
+    required: true
+    default: ${{ github.sha }}
+outputs:
+  deploymentId:
+    description: ID of newly-created deployment
+runs:
+  using: docker
+  image: docker://glassechidna/github-deployments
+  post: help?
+  env:
+    INPUT_STATE: create
