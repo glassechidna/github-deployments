@@ -1,0 +1,30 @@
+name: GitHub Deployments Status Updater
+description: Update the status on active GitHub deployments
+inputs:
+  deploymentId:
+    description: ID of created deployment to update - not applicable for "create"
+    required: true
+    default: "0"
+  environmentUrl:
+    description: URL of service being deployed
+    required: true
+    default: ""
+  description:
+    description: Optional explanation of status update
+    required: true
+    default: ""
+  token:
+    description: GitHub API key. GITHUB_TOKEN is fine for this one
+    required: true
+  sha:
+    description: SHA of commit being deployed.
+    required: true
+    default: ${{ github.sha }}
+  state:
+    description: >
+      State of deployment. Should be one of: error, failure, inactive,
+      in_progress, queued pending, or success.
+    required: true
+runs:
+  using: docker
+  image: Dockerfile
