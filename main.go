@@ -27,7 +27,12 @@ func main() {
 	token := os.Getenv("INPUT_TOKEN")
 	commit := os.Getenv("INPUT_SHA")
 	runId := os.Getenv("GITHUB_RUN_ID")
+
 	state := os.Getenv("INPUT_STATE")
+	state = strings.ToLower(state)
+	if state == "cancelled" { // because people might use ${{ job.status }}
+		state = "inactive"
+	}
 
 	ctx := context.Background()
 	st := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
