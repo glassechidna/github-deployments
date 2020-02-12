@@ -5,10 +5,27 @@ import (
 	"fmt"
 	"github.com/google/go-github/v29/github"
 	"golang.org/x/oauth2"
+	"net/http"
+	"net/http/httputil"
 	"os"
 	"strconv"
 	"strings"
 )
+
+type logTransport struct {
+	http.RoundTripper
+}
+
+func (l *logTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	body, _ := httputil.DumpRequestOut(r, true)
+	fmt.Println(string(body))
+
+	resp, err :=  l.RoundTripper.RoundTrip(r)
+
+	body, _ = httputil.DumpResponse(resp, true)
+	fmt.Println(string(body))
+	return resp, err
+}
 
 func main() {
 	ownerRepo := os.Getenv("GITHUB_REPOSITORY")
@@ -36,7 +53,13 @@ func main() {
 
 	ctx := context.Background()
 	st := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
-	c := github.NewClient(oauth2.NewClient(ctx, st))
+	hc := oauth2.NewClient(ctx, st)
+
+	if _, verbose := os.LookupEnv("VERBOSE"); verbose {
+		hc.Transport = &logTransport{hc.Transport}
+	}
+
+	c := github.NewClient(hc)
 
 	switch state {
 	case "create":
